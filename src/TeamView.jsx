@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
 
 const SHIFT_COLORS = {
-  D: { bg: '#4A6741', color: 'white' },
-  N: { bg: '#1a2a4a', color: 'white' },
-  E: { bg: '#8B6914', color: 'white' },
-  O: { bg: '#e8e8e8', color: '#999' },
+  D: { bg: '#4A6741', color: 'white', cls: 'shift-D' },
+  N: { bg: '#1a2a4a', color: 'white', cls: 'shift-N' },
+  E: { bg: '#8B6914', color: 'white', cls: 'shift-E' },
+  O: { bg: '#e8e8e8', color: '#999', cls: '' },
 }
 
 const MONTHS = [
@@ -13,7 +13,7 @@ const MONTHS = [
   'July','August','September','October','November','December'
 ]
 
-export default function TeamView({ currentMonth, currentYear }) {
+export default function TeamView({ currentMonth, currentYear, printMode = false }) {
   const [nurses, setNurses] = useState([])
   const [schedule, setSchedule] = useState({})
   const [requests, setRequests] = useState({})
@@ -92,52 +92,65 @@ export default function TeamView({ currentMonth, currentYear }) {
   )
 
   return (
-    <div style={{ padding: '1rem', overflowX: 'auto' }}>
-      <h3 style={{ color: '#4A6741', marginBottom: '0.75rem', fontSize: '1rem' }}>
-        {MONTHS[currentMonth]} {currentYear} — Full Team
-      </h3>
-
-      {/* Legend */}
-      <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-        {[
-          { label: 'Day', bg: '#4A6741', color: 'white' },
-          { label: 'Night', bg: '#1a2a4a', color: 'white' },
-          { label: 'Evening', bg: '#8B6914', color: 'white' },
-          { label: 'Off', bg: '#e8e8e8', color: '#999' },
-          { label: 'Requested Off', bg: '#ffc107', color: '#333' },
-          { label: 'Approved Off', bg: '#dc3545', color: 'white' },
-          { label: 'Partial shift', bg: '#4A6741', color: 'white', partial: true },
-        ].map(item => (
-          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <div style={{
-              width: '12px', height: '12px',
-              background: item.bg, borderRadius: '2px',
-              border: item.partial ? '2px dashed #c5d9c0' : 'none'
-            }} />
-            <span style={{ fontSize: '0.72rem', color: '#555' }}>{item.label}</span>
-          </div>
-        ))}
+    <div
+      className="print-area"
+      style={{ padding: printMode ? '0' : '1rem', overflowX: 'auto' }}
+    >
+      {/* Print header */}
+      <div className="print-header">
+        <h2 style={{ color: '#4A6741', marginBottom: '0.25rem', fontSize: '1rem' }}>
+          Rocky Mountain Treatment Center
+        </h2>
+        <p style={{ color: '#666', fontSize: '0.8rem', margin: 0 }}>
+          {MONTHS[currentMonth]} {currentYear} — Full Team Schedule
+        </p>
       </div>
 
+      {/* Screen-only legend */}
+      {!printMode && (
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+          {[
+            { label: 'Day', bg: '#4A6741', color: 'white' },
+            { label: 'Night', bg: '#1a2a4a', color: 'white' },
+            { label: 'Evening', bg: '#8B6914', color: 'white' },
+            { label: 'Off', bg: '#e8e8e8', color: '#999' },
+            { label: 'Requested Off', bg: '#ffc107', color: '#333' },
+            { label: 'Approved Off', bg: '#dc3545', color: 'white' },
+            { label: 'Partial shift', bg: '#4A6741', color: 'white', partial: true },
+          ].map(item => (
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <div style={{
+                width: '12px', height: '12px',
+                background: item.bg, borderRadius: '2px',
+                border: item.partial ? '2px dashed #c5d9c0' : 'none'
+              }} />
+              <span style={{ fontSize: '0.72rem', color: '#555' }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Table */}
       <div style={{ overflowX: 'auto' }}>
         <table style={{
           borderCollapse: 'collapse',
           fontSize: '0.75rem',
-          minWidth: '600px'
+          minWidth: printMode ? '100%' : '600px',
+          width: printMode ? '100%' : 'auto'
         }}>
           <thead>
             <tr>
               <th style={{
                 padding: '0.4rem 0.6rem',
                 background: '#4A6741', color: 'white',
-                textAlign: 'left', position: 'sticky',
-                left: 0, zIndex: 1, minWidth: '100px'
+                textAlign: 'left', position: printMode ? 'static' : 'sticky',
+                left: 0, zIndex: 1, minWidth: '80px'
               }}>Nurse</th>
               {days.map(d => (
                 <th key={d} style={{
                   padding: '0.4rem 0.3rem',
                   background: '#4A6741', color: 'white',
-                  textAlign: 'center', minWidth: '28px'
+                  textAlign: 'center', minWidth: '22px'
                 }}>{d}</th>
               ))}
             </tr>
@@ -149,18 +162,18 @@ export default function TeamView({ currentMonth, currentYear }) {
 
               return (
                 <tr key={nurse.id}>
-                  <td style={{
-                    padding: '0.4rem 0.6rem',
-                    background: rowBg,
-                    position: 'sticky', left: 0, zIndex: 1,
-                    borderRight: '2px solid #ddd'
-                  }}>
+                  <td
+                    className="nurse-name-cell"
+                    style={{
+                      padding: '0.4rem 0.6rem',
+                      background: rowBg,
+                      position: printMode ? 'static' : 'sticky',
+                      left: 0, zIndex: 1,
+                      borderRight: '2px solid #ddd'
+                    }}>
                     <div style={{ fontWeight: 'bold', color: '#333' }}>{nurse.name}</div>
                     {isPartial && (
-                      <div style={{
-                        fontSize: '0.65rem', color: '#4A6741',
-                        fontWeight: 'normal', marginTop: '1px'
-                      }}>
+                      <div style={{ fontSize: '0.65rem', color: '#4A6741' }}>
                         {nurse.shift_start}–{nurse.shift_end}
                       </div>
                     )}
@@ -173,29 +186,32 @@ export default function TeamView({ currentMonth, currentYear }) {
                     let bg = rowBg
                     let color = '#ccc'
                     let label = ''
+                    let cls = ''
                     let borderStyle = '1px solid #eee'
 
                     if (reqStatus === 'pending') {
-                      bg = '#ffc107'; color = '#333'; label = 'Req'
+                      bg = '#ffc107'; color = '#333'; label = 'Req'; cls = 'shift-REQ'
                     } else if (reqStatus === 'approved') {
-                      bg = '#dc3545'; color = 'white'; label = 'Off'
+                      bg = '#dc3545'; color = 'white'; label = 'Off'; cls = 'shift-OFF'
                     } else if (shift && shift !== 'O') {
                       const s = SHIFT_COLORS[shift]
-                      bg = s.bg; color = s.color; label = shift
+                      bg = s.bg; color = s.color; label = shift; cls = s.cls
                       if (isPartial) borderStyle = '2px dashed #c5d9c0'
                     }
 
                     return (
-                      <td key={day} style={{
-                        padding: '0.3rem',
-                        background: bg,
-                        color,
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        fontSize: '0.7rem',
-                        border: borderStyle,
-                        position: 'relative'
-                      }}>
+                      <td key={day}
+                        className={cls}
+                        style={{
+                          padding: '0.3rem',
+                          background: bg,
+                          color,
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                          fontSize: '0.7rem',
+                          border: borderStyle,
+                          position: 'relative'
+                        }}>
                         {label}
                         {isPartial && shift && shift !== 'O' && reqStatus !== 'approved' && (
                           <div style={{
@@ -212,6 +228,25 @@ export default function TeamView({ currentMonth, currentYear }) {
             })}
           </tbody>
         </table>
+      </div>
+
+      {/* Print legend (print only) */}
+      <div className="print-legend">
+        {[
+          { label: 'Day', bg: '#4A6741' },
+          { label: 'Night', bg: '#1a2a4a' },
+          { label: 'Evening', bg: '#8B6914' },
+          { label: 'Requested Off', bg: '#ffc107' },
+          { label: 'Approved Off', bg: '#dc3545' },
+        ].map(item => (
+          <div key={item.label} className="print-legend-item">
+            <div className="print-legend-swatch" style={{ background: item.bg }} />
+            <span>{item.label}</span>
+          </div>
+        ))}
+        <div className="print-legend-item">
+          <span style={{ fontSize: '8pt' }}>½ = partial shift</span>
+        </div>
       </div>
     </div>
   )

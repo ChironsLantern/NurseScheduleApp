@@ -1,0 +1,138 @@
+@media print {
+    /* Hide everything by default */
+    body * {
+      visibility: hidden;
+    }
+  
+    /* Show only the printable area */
+    .print-area,
+    .print-area * {
+      visibility: visible;
+    }
+  
+    .print-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  
+    /* Landscape + margins */
+    @page {
+      size: landscape;
+      margin: 0.5in;
+    }
+  
+    /* Clean table rendering */
+    table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      font-size: 9pt !important;
+      font-family: Arial, sans-serif !important;
+    }
+  
+    th, td {
+      border: 1px solid #ccc !important;
+      padding: 3px 4px !important;
+      text-align: center !important;
+    }
+  
+    th {
+      background-color: #4A6741 !important;
+      color: white !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    /* Shift colors print correctly */
+    .shift-D {
+      background-color: #4A6741 !important;
+      color: white !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    .shift-N {
+      background-color: #1a2a4a !important;
+      color: white !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    .shift-E {
+      background-color: #8B6914 !important;
+      color: white !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    .shift-REQ {
+      background-color: #ffc107 !important;
+      color: #333 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    .shift-OFF {
+      background-color: #dc3545 !important;
+      color: white !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    /* Print header */
+    .print-header {
+      margin-bottom: 12pt !important;
+    }
+  
+    .print-header h2 {
+      color: #4A6741 !important;
+      font-size: 16pt !important;
+      margin: 0 0 4pt 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    .print-header p {
+      font-size: 9pt !important;
+      color: #666 !important;
+      margin: 0 !important;
+    }
+  
+    /* Nurse name column left-aligned */
+    td.nurse-name-cell {
+      text-align: left !important;
+      font-weight: bold !important;
+      min-width: 60pt !important;
+    }
+  
+    /* No page breaks inside table */
+    table, tr {
+      page-break-inside: avoid !important;
+    }
+  
+    /* Legend */
+    .print-legend {
+      display: flex !important;
+      gap: 16pt !important;
+      margin-top: 8pt !important;
+      flex-wrap: wrap !important;
+    }
+  
+    .print-legend-item {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4pt !important;
+      font-size: 8pt !important;
+      color: #333 !important;
+    }
+  
+    .print-legend-swatch {
+      width: 10pt !important;
+      height: 10pt !important;
+      border-radius: 2pt !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+  

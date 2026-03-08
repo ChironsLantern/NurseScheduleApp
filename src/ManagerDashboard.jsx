@@ -4,7 +4,6 @@ import { supabase } from './supabase'
 const SHIFT_COLORS = {
   D: { bg: '#4A6741', color: 'white', label: 'Day' },
   N: { bg: '#1a2a4a', color: 'white', label: 'Night' },
-  E: { bg: '#8B6914', color: 'white', label: 'Evening' },
   O: { bg: '#e8e8e8', color: '#999', label: 'Off' },
 }
 
@@ -565,9 +564,12 @@ export default function ManagerDashboard({ nurse, onLogout }) {
       {/* ── EXPORT TAB ── */}
       {activeTab === 'export' && (
         <div style={{ padding: '1rem' }}>
+
+          {/* CSV Export */}
           <div style={{
             background: 'white', borderRadius: '10px', padding: '1.5rem',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.08)', textAlign: 'center'
+            boxShadow: '0 1px 4px rgba(0,0,0,0.08)', textAlign: 'center',
+            marginBottom: '1rem'
           }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📋</div>
             <h3 style={{ color: '#4A6741', marginBottom: '0.5rem' }}>
@@ -585,8 +587,32 @@ export default function ManagerDashboard({ nurse, onLogout }) {
               Download CSV
             </button>
           </div>
+
+          {/* Print Schedule */}
+          <div style={{
+            background: 'white', borderRadius: '10px', padding: '1.5rem',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.08)', textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🖨️</div>
+            <h3 style={{ color: '#4A6741', marginBottom: '0.5rem' }}>
+              Print {MONTHS[currentMonth]} Team Schedule
+            </h3>
+            <p style={{ color: '#666', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+              Prints a clean landscape view of the full team grid —
+              ready to post in the break room or keep on file.
+            </p>
+            <button onClick={() => window.print()} style={{
+              background: '#4A6741', color: 'white', border: 'none',
+              borderRadius: '8px', padding: '0.75rem 2rem',
+              fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer'
+            }}>
+              Print Schedule
+            </button>
+          </div>
+
         </div>
       )}
+
 
       {/* ── EDIT CELL MODAL ── */}
       {editCell && (

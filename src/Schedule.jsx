@@ -6,7 +6,6 @@ import TeamView from './TeamView'
 const SHIFT_COLORS = {
   D: { bg: '#4A6741', color: 'white', label: 'Day' },
   N: { bg: '#1a2a4a', color: 'white', label: 'Night' },
-  E: { bg: '#8B6914', color: 'white', label: 'Evening' },
   O: { bg: '#e8e8e8', color: '#666', label: 'Off' },
 }
 
